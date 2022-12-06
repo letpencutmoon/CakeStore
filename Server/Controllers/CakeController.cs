@@ -1,4 +1,5 @@
 ﻿using CakeStore.Server.Data;
+using CakeStore.Server.Service.CakeService;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,16 +9,17 @@ namespace CakeStore.Server.Controllers
     [ApiController]
     public class CakeController : ControllerBase
     {
-        private readonly DataContext _context;
-        public CakeController(DataContext context)
+        private readonly ICakeService _cakeService;
+
+        public CakeController( ICakeService cakeService)
         {
-            this._context = context;
+            this._cakeService = cakeService;
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<Cake>>> GetCake(){
-            var cakes = await _context.Cake.ToListAsync();
-            return Ok(cakes);
+        public async Task<ActionResult<ServiceResponse<List<Cake>>>> GetCake(){
+            var result = await _cakeService.GetCake();
+            return Ok(result);
         }
     }
 }

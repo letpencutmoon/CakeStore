@@ -1,4 +1,4 @@
-﻿@inject HttpClient Http
+﻿@inject ICakeService cakeservice
 
 <style>
             .demo-mat-card {
@@ -20,7 +20,7 @@
             <div class="mat-layout-grid">
                 <div class = "mat-layout-grid-inner">
                     
-                    @foreach (var item in cakes)
+                    @foreach (var item in cakeservice.Cakes)
                     {
                         <div class="mat-layout-grid-cell-span-4">
                             <MatCard class="demo-mat-card">
@@ -51,11 +51,8 @@
 
 
 @code{
-    public List<Cake> cakes = new();
-
     protected override async Task OnInitializedAsync()
     {
-        var result = await Http.GetFromJsonAsync<List<Cake>>("api/Cake");
-        if (result is not null) cakes = result;
+        await cakeservice.GetCake();
     }
 }

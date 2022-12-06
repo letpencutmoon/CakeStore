@@ -1,7 +1,9 @@
 global using CakeStore.Shared.Model;
+global using CakeStore.Shared;
 global using Microsoft.EntityFrameworkCore;
 using CakeStore.Server.Data;
 using Microsoft.AspNetCore.ResponseCompression;
+using CakeStore.Server.Service.CakeService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +19,8 @@ builder.Services.AddRazorPages();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddScoped<ICakeService, CakeService>();
 
 var app = builder.Build();
 
