@@ -1,0 +1,33 @@
+﻿<MatDrawer @bind-Opened="@Opened">
+    <MatNavMenu>
+            <MatNavItem>
+                <MatButtonLink Href="/">
+                    首页
+                </MatButtonLink>
+            </MatNavItem>
+            
+            <MatNavItem>
+                <MatButtonLink Href="/Counter">
+                    计数器
+                </MatButtonLink>
+            </MatNavItem>
+
+            <MatNavItem>
+                <MatButtonLink Href="/FetchData">
+                    数据
+                </MatButtonLink>
+            </MatNavItem>
+
+            <MatNavItem>
+                <MatButtonLink Href="/LogIn">
+                    登录
+                </MatButtonLink>
+            </MatNavItem>
+    </MatNavMenu>
+</MatDrawer>
+
+@code
+{
+    [Parameter]
+    public bool Opened { get; set; } = false;
+}

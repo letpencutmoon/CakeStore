@@ -1,0 +1,61 @@
+﻿@inject HttpClient Http
+
+<style>
+            .demo-mat-card {
+                max-width: 400px;
+            }
+ 
+            .demo-mat-card-content {
+                padding: 1rem;
+            }
+ 
+            .demo-mat-card-clean-margin {
+                margin: 0px;
+            }
+</style>
+<div class="mat-layout-grid">
+    <div class = "mat-layout-grid-inner">
+        <div class="mat-layout-grid-cell-span-2"></div>
+        <div class = "mat-layout-grid-cell-span-8">
+            <div class="mat-layout-grid">
+                <div class = "mat-layout-grid-inner">
+                    
+                    @foreach (var item in cakes)
+                    {
+                        <div class="mat-layout-grid-cell-span-4">
+                            <MatCard class="demo-mat-card">
+                                <MatCardContent>
+                                    <MatCardMedia Wide="true" ImageUrl="@item.Imgurl"></MatCardMedia>
+                                    <div class="demo-mat-card-content">
+                                        <MatHeadline6 class="demo-mat-card-clean-margin">
+                                            @item.Name
+                                        </MatHeadline6>
+                                        <MatSubtitle2 class="demo-mat-card-clean-margin">
+                                            ￥@item.Price
+                                        </MatSubtitle2>
+                                    </div>
+                                    <MatBody2 class="demo-mat-card-content demo-mat-card-clean-margin">
+                                        @item.Description
+                                    </MatBody2>
+                                </MatCardContent>
+                            </MatCard>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="mat-layout-grid-cell-span-2"></div>
+    </div>
+</div>
+
+
+
+@code{
+    public List<Cake> cakes = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var result = await Http.GetFromJsonAsync<List<Cake>>("api/Cake");
+        if (result is not null) cakes = result;
+    }
+}

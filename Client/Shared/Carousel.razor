@@ -1,0 +1,45 @@
+﻿
+
+<div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
+  <div class="carousel-inner">
+
+      <div class="carousel-item active" style="width:100%">
+            <img src="@cakes[0].Imgurl">
+      </div>
+
+      @for(int i = 1; i < cakes.Count; i++)
+        {
+            <div class="carousel-item">
+                <img src="@cakes[i].Imgurl">
+            </div>
+        }
+
+  </div>
+
+  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Previous</span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Next</span>
+  </button>
+</div>
+
+@code{
+    public List<Cake> cakes = new()
+        {
+            new Cake
+            {
+                ID = 1,
+                Name = "",
+                Imgurl = "https://imagecdn.lapetit.cn/postsystem/docroot/images/promotion/202211/B774C1A41FFB2809B799E38C2CED0848.jpg"
+            },
+            new Cake
+            {
+                ID = 2,
+                Name = "",
+                Imgurl = "https://imagecdn.lapetit.cn/postsystem/docroot/images/promotion/202211/0B2815B6E8915FE6CA2D63D3CD90C86A.jpg"
+            }
+        };
+}

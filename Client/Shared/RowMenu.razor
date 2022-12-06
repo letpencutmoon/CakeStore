@@ -1,0 +1,21 @@
+﻿<MatAppBar Fixed="true">
+        <MatAppBarRow>
+            <MatAppBarSection>
+                <MatIconButton Icon="menu" OnClick="@ButtonClicked"></MatIconButton>
+                <MatAppBarTitle>BlazorStudy</MatAppBarTitle>
+            </MatAppBarSection>
+            <MatAppBarSection Align="@MatAppBarSectionAlign.End">
+                <MatIconButton Icon="favorite"></MatIconButton>
+            </MatAppBarSection>
+        </MatAppBarRow>
+</MatAppBar>
+
+@code {
+    public void ButtonClicked()
+    {
+        eventCallback.InvokeAsync();
+    }
+
+    [Parameter]
+    public EventCallback eventCallback { get; set; }
+}

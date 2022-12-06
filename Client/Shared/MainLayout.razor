@@ -1,0 +1,31 @@
+﻿@inherits LayoutComponentBase
+
+<div class="page">
+   <MatAppBarContainer >
+    <RowMenu eventCallback="ButtonClicked"/>
+    <MatAppBarContent>
+        <MatDrawerContainer Style="width: 100vw; height: 100vh;">
+                <Menu  Opened = "Opened"/>
+            <MatDrawerContent>
+                <div>
+                    <main>
+                        <article class="content px-4">
+                            @Body
+                        </article>
+                    </main>
+                </div>
+            </MatDrawerContent>
+        </MatDrawerContainer>
+    </MatAppBarContent>
+</MatAppBarContainer>
+
+</div>
+
+@code{
+    public bool Opened = false;
+
+    public void ButtonClicked()
+    {
+        Opened = !Opened;
+    }
+}
