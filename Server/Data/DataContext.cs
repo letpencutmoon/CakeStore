@@ -2,10 +2,14 @@
 {
     public class DataContext:DbContext
     {
+        #pragma warning disable CS8618
         public DataContext(DbContextOptions<DataContext> options):base(options)
+        #pragma warning restore CS8618
         {
         }
 
+        public DbSet<Cake> Cake { get; set; }
+        public DbSet<User> User { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Cake>().HasData(
@@ -43,8 +47,5 @@
                 }
             );
         }
-
-        public DbSet<Cake> Cake { get; set; }
-        public DbSet<User> User { get; set; }
     }
 }
