@@ -1,5 +1,17 @@
 ﻿@inject ICakeService cakeservice
 
+@if(Cakes == null || Cakes.Count == 0){
+    if(Cakes == null){
+        <p>加载中</p>
+    }
+    else
+    {
+        <p>没有数据 </p>
+    }
+}
+else
+{
+
 <style>
             .demo-mat-card {
                 max-width: 400px;
@@ -20,25 +32,28 @@
             <div class="mat-layout-grid">
                 <div class = "mat-layout-grid-inner">
                     
-                    @foreach (var item in cakeservice.Cakes)
+                    @foreach (var item in Cakes)
                     {
                         <div class="mat-layout-grid-cell-span-4">
-                            <MatCard class="demo-mat-card">
+                                <MatCard class="demo-mat-card">
                                 <MatCardContent>
                                     <MatCardMedia Wide="true" ImageUrl="@item.Imgurl"></MatCardMedia>
                                     <div class="demo-mat-card-content">
+                                        <NavLink href="@String.Format("/detail/{0}",item.ID)">
                                         <MatHeadline6 class="demo-mat-card-clean-margin">
                                             @item.Name
                                         </MatHeadline6>
+                                        </NavLink>
                                         <MatSubtitle2 class="demo-mat-card-clean-margin">
                                             ￥@item.Price
                                         </MatSubtitle2>
                                     </div>
-                                    <MatBody2 class="demo-mat-card-content demo-mat-card-clean-margin">
+                                    <MatBody2  class="demo-mat-card-content demo-mat-card-clean-margin">
                                         @item.Description
                                     </MatBody2>
                                 </MatCardContent>
                             </MatCard>
+                            
                         </div>
                     }
                 </div>
@@ -48,11 +63,9 @@
     </div>
 </div>
 
-
+}
 
 @code{
-    protected override async Task OnInitializedAsync()
-    {
-        await cakeservice.GetCake();
-    }
+    [Parameter]
+    public List<Cake>? Cakes { get; set; }
 }

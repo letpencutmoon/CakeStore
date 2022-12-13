@@ -4,5 +4,7 @@
     {
         public abstract Task<ServiceResponse<List<Cake>>> GetCake();
 
+        public abstract Task<ServiceResponse<Cake>> GetCake(int id);
+
     }
 }

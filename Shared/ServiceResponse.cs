@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CakeStore.Shared.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,5 +14,10 @@ namespace CakeStore.Shared
         public bool Success { get; set; } = true;
 
         public string Message { get; set; } = string.Empty;
+
+        public static implicit operator ServiceResponse<T>(ServiceResponse<List<Category>> v)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

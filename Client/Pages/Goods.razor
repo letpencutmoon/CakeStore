@@ -1,0 +1,17 @@
+﻿@page "/goods/{Id:int}"
+@inject ICakeService cakeservice
+
+<CakeCard Cakes="@cakes"/>
+
+@code {
+	[Parameter]
+	public int Id { get; set; }
+	public List<Cake> cakes = new();
+	protected override async Task OnParametersSetAsync()
+	{
+		await cakeservice.GetCakes();
+		if(Id != 0) cakes = cakeservice.Cakes.FindAll(p=>p.CategoryId == Id);
+		else cakes = cakeservice.Cakes;
+
+	}
+}

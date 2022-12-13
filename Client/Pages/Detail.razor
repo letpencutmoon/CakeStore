@@ -1,0 +1,39 @@
+﻿@page "/detail/{Id:int}"
+@inject ICakeService cakeservice
+
+<PageTitle>详情</PageTitle>
+
+@if(cake == null){
+	<p>@message </p>
+}
+else
+{
+	<div class = "mat-layout-grid">
+	<div class = "mat-layout-grid-inner">
+		<div class = "mat-layout-grid-cell mat-layout-grid-cell-span-4">
+			<img src = "@cake.Imgurl" />
+		</div>
+		<div class = "mat-layout-grid-cell mat-layout-grid-cell-span-6">
+			<MatH3>@cake.Name</MatH3>
+			<MatH4>@cake.Price</MatH4>
+			<MatH5>@cake.Description</MatH5>
+		</div>
+	</div>
+
+</div>
+}
+
+
+
+@code {
+	[Parameter]
+	public int Id { get; set; }
+	public string message = "Loading.....";
+
+	private Cake? cake;
+	protected override async Task OnParametersSetAsync()
+	{
+		var result = await cakeservice.GetCake(Id);
+		if(result.Success) cake = result.Data;
+	}
+}

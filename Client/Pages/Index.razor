@@ -1,4 +1,5 @@
 ﻿@page "/"
+@inject ICakeService cakeservice
 
 <PageTitle>Index</PageTitle>
 
@@ -8,7 +9,34 @@
             <Carousel/>
         </div>*@
         <div class = "mat-layout-grid-cell mat-layout-grid-cell-span-12">
-            <CakeCard/>
+            <CakeCard Cakes="@newcakes"/>
         </div>
     </div>
 </div>
+
+@code{
+
+    public List<Cake> newcakes = new();
+
+    protected override async Task OnParametersSetAsync()
+    {
+        await cakeservice.GetCakes();
+        cakeservice.Cakes.Sort((x,y)=>CompareID(x,y));
+        for(int i=0;i<16 && i < cakeservice.Cakes.Count; i++)
+        {
+            newcakes.Add(cakeservice.Cakes[i]);
+        }
+    }
+
+    private int CompareID(Cake x,Cake y)
+    {
+        if(x.ID > y.ID)
+        {
+            return -1;
+        }
+        else
+        {
+            return 1;
+        }
+    }
+}

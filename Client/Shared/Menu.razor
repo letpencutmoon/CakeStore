@@ -1,27 +1,33 @@
-﻿<MatDrawer @bind-Opened="@Opened">
+﻿@inject ICategoryService categoryservice
+
+<MatDrawer @bind-Opened="@Opened">
     <MatNavMenu>
-            <MatNavItem>
-                <MatButtonLink Href="/">
+            <MatNavItem Href="/">
                     首页
-                </MatButtonLink>
             </MatNavItem>
             
-            <MatNavItem>
-                <MatButtonLink Href="/Counter">
-                    计数器
-                </MatButtonLink>
-            </MatNavItem>
+            <MatNavSubMenu>
+                <MatNavSubMenuHeader>
+                    <MatNavItem>
+                        商品
+                    </MatNavItem>
+                </MatNavSubMenuHeader>
+                <MatNavSubMenuList>
+                    <MatNavItem Href="/goods/0">
+                        全部
+                    </MatNavItem>
+                @foreach(var item in categoryservice.Categories){
+                    <MatNavItem Href="@String.Format("/goods/{0}",item.ID)">
+                        @item.Name
+                    </MatNavItem>
+                }
+            </MatNavSubMenuList>
+            </MatNavSubMenu>
 
-            <MatNavItem>
-                <MatButtonLink Href="/FetchData">
-                    数据
-                </MatButtonLink>
-            </MatNavItem>
+            <MatDivider></MatDivider>
 
-            <MatNavItem>
-                <MatButtonLink Href="/LogIn">
+            <MatNavItem Href="/LogIn">
                     登录
-                </MatButtonLink>
             </MatNavItem>
     </MatNavMenu>
 </MatDrawer>
@@ -30,4 +36,9 @@
 {
     [Parameter]
     public bool Opened { get; set; } = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await categoryservice.GetCategories();
+    }
 }

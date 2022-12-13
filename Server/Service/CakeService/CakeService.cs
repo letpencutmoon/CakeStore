@@ -19,5 +19,22 @@ namespace CakeStore.Server.Service.CakeService
 
             return response;
         }
+
+        public async Task<ServiceResponse<Cake>> GetCake(int id)
+        {
+            var response = new ServiceResponse<Cake>();
+            var cake = await _context.Cake.FindAsync(id);
+            
+            if(cake != null)
+            {
+                response.Data = cake;
+            }
+            else
+            {
+                response.Success = false;
+            }
+
+            return response;
+        }
     }
 }

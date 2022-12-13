@@ -3,6 +3,8 @@
     public interface ICakeService
     {
         public List<Cake> Cakes { get; set; }
-        public Task GetCake();
+        public Task<ServiceResponse<Cake>>  GetCake(int id);
+
+        public Task GetCakes();
     }
 }

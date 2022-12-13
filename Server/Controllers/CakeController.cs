@@ -21,5 +21,12 @@ namespace CakeStore.Server.Controllers
             var result = await _cakeService.GetCake();
             return Ok(result);
         }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<ServiceResponse<Cake>>> GetCake(int id)
+        {
+            var result = await _cakeService.GetCake(id);
+            return Ok(result);
+        }
     }
 }
