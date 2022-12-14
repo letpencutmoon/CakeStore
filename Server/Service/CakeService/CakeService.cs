@@ -36,5 +36,25 @@ namespace CakeStore.Server.Service.CakeService
 
             return response;
         }
+
+        public async Task<ServiceResponse<List<Cake>>> Search(string searchText)
+        {
+            var response = new ServiceResponse<List<Cake>>();
+            var cake = await _context.Cake.Where(p=>p.Name.Contains(searchText) || p.Description.Contains(searchText)).ToListAsync();
+            response.Data = cake;
+            return response;
+        }
+
+        public async Task<ServiceResponse<List<string>>> Searchsuggestions(string searchText)
+        {
+            var response = new ServiceResponse<List<string>>()
+            {
+                Data = await _context.Cake
+                .Where(p=>p.Name.Contains(searchText) || p.Description.Contains(searchText))
+                .Select(p => p.Name)
+                .ToListAsync()
+            };
+            return response;
+        }
     }
 }

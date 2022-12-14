@@ -1,0 +1,17 @@
+﻿@inject ICakeService cakeservice;
+
+@page "/Search/{str}"
+
+<CakeCard Cakes="@cakes"/>
+
+@code {
+	[Parameter]
+	public string str { get; set; } = string.Empty;
+	public List<Cake> cakes = new();
+
+	protected override async Task OnParametersSetAsync()
+	{
+		var response = await cakeservice.SearchCakes(str);
+		if (response != null&& response.Data != null) cakes = response.Data;
+	}
+}

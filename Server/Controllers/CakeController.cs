@@ -28,5 +28,19 @@ namespace CakeStore.Server.Controllers
             var result = await _cakeService.GetCake(id);
             return Ok(result);
         }
+
+        [HttpGet("Search/{searchText}")]
+        public async Task<ServiceResponse<List<Cake>>> Search(string searchText)
+        {
+            var result = await _cakeService.Search(searchText);
+            return result;
+        }
+
+        [HttpGet("SearchSuggestion/{searchText}")]
+        public async Task<ServiceResponse<List<string>>> SeachSuggestion(string searchText)
+        {
+            var result = await _cakeService.Searchsuggestions(searchText);
+            return result;
+        }
     }
 }

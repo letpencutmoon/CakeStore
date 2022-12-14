@@ -1,0 +1,60 @@
+﻿@inject NavigationManager navigationmanager;
+@inject ICakeService cakeservice
+
+<div class="input-group">
+	<input 
+	@bind-value="searchText"
+	@bind-value:event="oninput"
+	type="search"
+	list="cakes"
+	@onkeyup="HandleSearch"
+	class="form-control"
+	placeholder="搜索"
+	@ref="searchinput"/>
+	<dataList id="cakes">
+		@foreach (var item in suggestions)
+		{
+			<option>@item</option>
+		}
+	</dataList>
+	<div class="input-group-append">
+		<button class="btn btn-primary" @onclick="SearchCakes">
+			<span class="oi oi-magnifying-glass">
+
+			</span>
+		</button>
+	</div>
+</div>
+
+@code {
+	private string searchText = string.Empty;
+	private List<string> suggestions = new();
+	protected ElementReference searchinput;
+
+	protected override async void OnAfterRender(bool firstRender)
+	{
+		if (firstRender)
+		{
+			await searchinput.FocusAsync();
+		}
+	}
+
+	public void SearchCakes()
+	{
+		navigationmanager.NavigateTo($"Search/{searchText}");
+	}
+
+	public async Task HandleSearch(KeyboardEventArgs args)
+	{
+		if(args.Key == null || args.Key.Equals("Enter"))
+		{
+			SearchCakes();
+		}
+		else if(searchText.Length >= 1)
+		{
+			var response = await cakeservice.SearchSuggestions(searchText);
+			if (response != null && response.Data != null) suggestions = response.Data;
+			
+		}
+	}
+}

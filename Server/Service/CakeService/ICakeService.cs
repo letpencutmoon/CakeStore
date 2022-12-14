@@ -6,5 +6,9 @@
 
         public abstract Task<ServiceResponse<Cake>> GetCake(int id);
 
+        public abstract Task<ServiceResponse<List<Cake>>> Search(string searchText);
+
+        public abstract Task<ServiceResponse<List<string>>> Searchsuggestions(string searchText);
+
     }
 }

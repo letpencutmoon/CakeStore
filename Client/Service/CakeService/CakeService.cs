@@ -22,5 +22,17 @@
             
             return response!;
         }
+
+        public async Task<ServiceResponse<List<Cake>>> SearchCakes(string searchText)
+        {
+            var response = await _httpClient.GetFromJsonAsync<ServiceResponse<List<Cake>>>($"api/Cake/Search/{searchText}");
+            return response!;
+        }
+
+        public async Task<ServiceResponse<List<string>>> SearchSuggestions(string searchText)
+        {
+            var response = await _httpClient.GetFromJsonAsync<ServiceResponse<List<string>>>($"api/Cake/SearchSuggestion/{searchText}");
+            return response!;
+        }
     }
 }

@@ -12,6 +12,5 @@
 		await cakeservice.GetCakes();
 		if(Id != 0) cakes = cakeservice.Cakes.FindAll(p=>p.CategoryId == Id);
 		else cakes = cakeservice.Cakes;
-
 	}
 }

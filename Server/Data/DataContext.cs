@@ -10,6 +10,8 @@
 
         public DbSet<Cake> Cake { get; set; }
 
+        //public DbSet<CakeSize> CakeSize { get; set; }
+
         public DbSet<Category> Category { get; set; }
         public DbSet<User> User { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)

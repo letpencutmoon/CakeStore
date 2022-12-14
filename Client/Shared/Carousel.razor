@@ -28,18 +28,18 @@
 
 @code{
     public List<Cake> cakes = new()
+    {
+        new Cake
         {
-            new Cake
-            {
-                ID = 1,
-                Name = "",
-                Imgurl = "https://imagecdn.lapetit.cn/postsystem/docroot/images/promotion/202211/B774C1A41FFB2809B799E38C2CED0848.jpg"
-            },
-            new Cake
-            {
-                ID = 2,
-                Name = "",
-                Imgurl = "https://imagecdn.lapetit.cn/postsystem/docroot/images/promotion/202211/0B2815B6E8915FE6CA2D63D3CD90C86A.jpg"
-            }
-        };
+            ID = 1,
+            Name = "",
+            Imgurl = "https://imagecdn.lapetit.cn/postsystem/docroot/images/promotion/202211/B774C1A41FFB2809B799E38C2CED0848.jpg"
+        },
+        new Cake
+        {
+            ID = 2,
+            Name = "",
+            Imgurl = "https://imagecdn.lapetit.cn/postsystem/docroot/images/promotion/202211/0B2815B6E8915FE6CA2D63D3CD90C86A.jpg"
+        }
+    };
 }
