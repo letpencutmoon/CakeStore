@@ -1,5 +1,6 @@
 ﻿@page "/detail/{Id:int}"
 @inject ICakeService cakeservice
+@inject ICartService cartservice
 
 <PageTitle>详情</PageTitle>
 
@@ -39,6 +40,9 @@ else
 					}
 				}
 				<MatH4>@GetSelectedVariant().Price</MatH4>
+				<button class="btn btn-primary" @onclick="AddToCart">
+					<i class="oi oi-cart"></i>&nbsp;&nbsp;添加到购物车
+				</button>
 		</div>
 	</div>
 </div>
@@ -71,5 +75,16 @@ else
 	{
 		var variant = cake.CakeVariants.FirstOrDefault(p=>p.CakeTypeId == currentTypeId);
 		return variant;
+	}
+
+	private async Task AddToCart()
+	{
+		var cakeVariant = GetSelectedVariant();
+		CartItem cartItem = new()
+		{
+			CakeId = cakeVariant.CakeId,
+			CakeTypeId = cakeVariant.CakeTypeId
+		};
+		await cartservice.AddToCart(cartItem);
 	}
 }

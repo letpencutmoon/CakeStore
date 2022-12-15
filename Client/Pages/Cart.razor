@@ -1,0 +1,85 @@
+﻿@page "/Cart"
+@inject ICartService cartservice
+
+<PageTitle>购物车</PageTitle>
+
+@if(cakecart == null || cakecart.Count == 0)
+{
+	<span>@message</span>
+}
+else
+{
+	<div>
+		@foreach (var item in cakecart)
+		{
+			<div class = "container">
+				<div class = "image-wrapper">
+					<img src="@item.Imgurl" class="image"/>
+				</div>
+				<div class="name">
+					<h5><a href="/cake/@item.CakeId">@item.Name</a></h5>
+					<span>@item.CakeType</span>
+					<div>
+						<input type="number" 
+						value="@item.Quantity"
+						@onchange="@((ChangeEventArgs e)=>UpdateQuantity(e,item))"
+						class="form-control input-quantity"
+						min="1"
+
+						/>
+					</div>
+					<div>
+						<button class="btn-delete" @onclick="@(()=>RemoveCakeFromCart(item.CakeId,item.CakeTypeId))">
+							删除
+						</button>
+					</div>
+				</div>
+				<div class="cart-cake-price">￥@(item.Price * item.Quantity)</div>
+			</div>
+		}
+		<div class="cart-cake-price">
+			总价 (@cakecart.Count):￥@cakecart.Sum(p=>p.Price * p.Quantity)
+		</div>
+	</div>
+}
+
+@code {
+	public List<CartCakeResponse> cakecart = null;
+	string message = "正在加载购物车";
+
+	//初始化时获取购物车内的信息
+	protected override async Task OnInitializedAsync()
+	{
+		await LoadCart();
+	}
+
+	private async Task RemoveCakeFromCart(int cakeId,int cakeTypeId)
+	{
+		await cartservice.RemoveCakeFromCart(cakeId,cakeTypeId);
+		await LoadCart();
+	}
+
+	private async Task LoadCart()
+	{
+		var cart = await cartservice.GetCakeCarts();
+		if (cart!=null && cart.Count == 0)
+		{
+			message = "你的购物车是空的";
+			cakecart = new();
+		}
+		else
+		{
+			cakecart = cart;	
+		}
+	}
+
+	private async Task UpdateQuantity(ChangeEventArgs args,CartCakeResponse cake)
+	{
+		cake.Quantity = int.Parse(args.Value.ToString());
+		if(cake.Quantity < 1){
+			cake.Quantity = 1;
+			await cartservice.UpdateQuantity(cake);
+		}
+
+	}
+}

@@ -3,6 +3,7 @@ global using CakeStore.Shared;
 global using Microsoft.EntityFrameworkCore;
 global using CakeStore.Server.Service.CakeService;
 global using CakeStore.Server.Service.CategoryService;
+global using CakeStore.Server.Service.CartService;
 using CakeStore.Server.Data;
 using Microsoft.AspNetCore.ResponseCompression;
 
@@ -23,6 +24,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<ICakeService, CakeService>();
 builder.Services.AddScoped<ICategoryService,CategoryService>();
+builder.Services.AddScoped<ICartService, CartService>();
 
 var app = builder.Build();
 
