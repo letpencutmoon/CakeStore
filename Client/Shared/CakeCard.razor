@@ -45,7 +45,7 @@ else
                                         </MatHeadline6>
                                         </NavLink>
                                         <MatSubtitle2 class="demo-mat-card-clean-margin">
-                                            ￥@item.Price
+                                            @GetPrice(item)
                                         </MatSubtitle2>
                                     </div>
                                     <MatBody2  class="demo-mat-card-content demo-mat-card-clean-margin">
@@ -68,4 +68,14 @@ else
 @code{
     [Parameter]
     public List<Cake>? Cakes { get; set; }
+
+    //获取最低价格
+    public string GetPrice(Cake cake)
+    {
+        var variants = cake.CakeVariants;
+        if (variants.Count == 0) return String.Empty;
+        if (variants.Count == 1) return $"￥{variants[0].Price}";
+        var min = variants.Min(p => p.Price);
+        return $"￥{min}";
+    }
 }

@@ -9,9 +9,12 @@ namespace CakeStore.Server.Service.CakeService
         {
             this._context = context;
         }
+        //商品展示
         public async Task<ServiceResponse<List<Cake>>> GetCake()
         {
-            var cake = await _context.Cake.ToListAsync();
+            var cake = await _context.Cake
+                .Include(navigationPropertyPath: p =>p.CakeVariants)
+                .ToListAsync();
             ServiceResponse<List<Cake>> response = new()
             {
                 Data = cake
@@ -20,10 +23,14 @@ namespace CakeStore.Server.Service.CakeService
             return response;
         }
 
+        //商品详细信息
         public async Task<ServiceResponse<Cake>> GetCake(int id)
         {
             var response = new ServiceResponse<Cake>();
-            var cake = await _context.Cake.FindAsync(id);
+            var cake = await _context.Cake
+                .Include(v => (v as Cake).CakeVariants)
+                .ThenInclude(p => (p as CakeVariant).CakeType)
+                .FirstOrDefaultAsync(p=>p.ID == id);
             
             if(cake != null)
             {
@@ -37,14 +44,18 @@ namespace CakeStore.Server.Service.CakeService
             return response;
         }
 
+        //搜索结果
         public async Task<ServiceResponse<List<Cake>>> Search(string searchText)
         {
             var response = new ServiceResponse<List<Cake>>();
-            var cake = await _context.Cake.Where(p=>p.Name.Contains(searchText) || p.Description.Contains(searchText)).ToListAsync();
+            var cake = await _context.Cake.Where(p=>p.Name.Contains(searchText) || p.Description.Contains(searchText))
+                .Include(v => (v as Cake).CakeVariants)
+                .ToListAsync();
             response.Data = cake;
             return response;
         }
 
+        //搜索推荐
         public async Task<ServiceResponse<List<string>>> Searchsuggestions(string searchText)
         {
             var response = new ServiceResponse<List<string>>()

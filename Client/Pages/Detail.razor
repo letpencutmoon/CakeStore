@@ -15,11 +15,32 @@ else
 		</div>
 		<div class = "mat-layout-grid-cell mat-layout-grid-cell-span-6">
 			<MatH3>@cake.Name</MatH3>
-			<MatH4>@cake.Price</MatH4>
 			<MatH5>@cake.Description</MatH5>
+				@if(cake.CakeVariants != null && cake.CakeVariants.Count > 1)
+				{
+					<div class="mb-3">
+						<select class = "form-select" @bind="currentTypeId">
+							@foreach (var item in cake.CakeVariants)
+							{
+								<option value="@item.CakeTypeId">
+									@item.CakeType.Name
+								</option>
+							}
+						</select>	
+					</div>
+				}
+				@if(GetSelectedVariant() != null)
+				{
+					if (GetSelectedVariant().OriginalPrice != GetSelectedVariant().Price)
+					{
+						<h6 class="text-muted original-price">
+							￥@GetSelectedVariant().OriginalPrice
+					</h6>
+					}
+				}
+				<MatH4>@GetSelectedVariant().Price</MatH4>
 		</div>
 	</div>
-
 </div>
 }
 
@@ -29,11 +50,26 @@ else
 	[Parameter]
 	public int Id { get; set; }
 	public string message = "Loading.....";
+	//用于记录当前选中项的变体类型
+	public int currentTypeId = 1;
 
 	private Cake? cake;
 	protected override async Task OnParametersSetAsync()
 	{
 		var result = await cakeservice.GetCake(Id);
-		if(result.Success) cake = result.Data;
+		if(result.Success){
+			cake = result.Data;
+			if(cake!.CakeVariants.Count > 0)
+			{
+				currentTypeId = cake.CakeVariants[0].CakeTypeId;
+			}
+		}
+	}
+
+	//获取选中项的变体
+	private CakeVariant GetSelectedVariant()
+	{
+		var variant = cake.CakeVariants.FirstOrDefault(p=>p.CakeTypeId == currentTypeId);
+		return variant;
 	}
 }
