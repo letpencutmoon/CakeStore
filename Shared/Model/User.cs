@@ -11,16 +11,14 @@ namespace CakeStore.Shared.Model
     {
 
         public int ID { get; set; }
-        [Required]
         public string Name { get; set; } = string.Empty;
 
-        [Required]
-        [StringLength(11)]
         public string Tel { get; set; } = string.Empty;
 
-        [Required]
-        [MinLength(8)]
-        [MaxLength(16)]
-        public string Password { get; set; } = string.Empty;
+        public byte[] PasswordHash { get; set; }
+
+        public byte[] PasswordSalt { get; set; }
+
+        public DateTime DataCreated { get; set; } = DateTime.Now;
     }
 }

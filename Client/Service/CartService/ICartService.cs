@@ -2,7 +2,7 @@
 {
     public interface ICartService
     {
-        event Action OnChange;
+        //event Action OnChange;
         public Task AddToCart(CartItem cartItem);
         public Task<List<CartItem>> GetCatItems();
         public Task<List<CartCakeResponse>> GetCakeCarts();

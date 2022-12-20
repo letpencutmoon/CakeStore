@@ -7,7 +7,7 @@ namespace CakeStore.Client.Service.CartService
         private readonly ILocalStorageService _localStorage;
         private readonly HttpClient _httpClient;
 
-        public event Action OnChange;
+        //public event Action OnChange;
 
         public CartService(ILocalStorageService localStorage,HttpClient httpClient)
         {

@@ -1,6 +1,11 @@
 ﻿@using System.ComponentModel.DataAnnotations
+@using Microsoft.AspNetCore.WebUtilities
+@inject IAuthService authservice
+@inject ILocalStorageService localstorage
+@inject NavigationManager navigationmanager
+@inject AuthenticationStateProvider provider
 
-<EditForm Model="user">
+<EditForm Model="user" OnValidSubmit="HandleLogin">
 <DataAnnotationsValidator/>
 
 <div class="mat-layout-grid">
@@ -12,7 +17,7 @@
 			</p>
 
 			<p>
-				<MatTextField Label="密码" @bind-Value="user.Password" FullWidth="true" Outlined="true"/>
+				<MatTextField Label="密码" @bind-Value="user.Password" Type="password" FullWidth="true" Outlined="true"/>
 				<ValidationMessage For="@(() => user.Password)"/>
 			</p>
 		</div>
@@ -26,6 +31,9 @@
 			<MatButton Raised="true" OnClick="Reset">重置</MatButton>
 		</div>
 		<div class="mat-layout-grid-cell mat-layout-grid-cell-span-2"></div>
+		<div class="mat-layout-grid-mat-layout-grid-cell-span-12 ">
+			<span>@message</span>
+		</div>
 	</div>
 
 </div>
@@ -37,6 +45,18 @@
 
 
 @code{
+	string message = string.Empty;
+
+	private string returnUrl = string.Empty;
+
+	protected override void OnInitialized()
+	{
+		var uri = navigationmanager.ToAbsoluteUri(navigationmanager.Uri);
+		if(QueryHelpers.ParseQuery(uri.Query).TryGetValue("returnUrl",out var url))
+		{
+			returnUrl = url;
+		}
+	}
 
 	public void Reset()
 	{
@@ -44,9 +64,30 @@
 		user.Tel = string.Empty;
 	}
 
-	public User user = new()
+	public UserLogin user = new()
+	{
+		Tel = string.Empty,
+		Password = string.Empty
+	};
+
+	public async void HandleLogin()
+	{
+		var response = await authservice.LogIn(user);
+		if (response == null)
 		{
-			Tel = string.Empty,
-			Password = string.Empty
-		};
+			message = "登录失败";
+		}
+		else if(response.Success)
+		{
+			message = string.Empty;
+
+			await localstorage.SetItemAsync("authToken",response.Data);
+			await provider.GetAuthenticationStateAsync();
+			navigationmanager.NavigateTo(returnUrl);
+		}
+		else
+		{
+			message = response.Message;
+		}
+	}
 }

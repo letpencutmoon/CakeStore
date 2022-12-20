@@ -1,15 +1,12 @@
 ﻿@using System.ComponentModel.DataAnnotations
+@inject IAuthService authservice
 
-<EditForm Model="user">
+<EditForm Model="user" OnValidSubmit="HandleRegistration">
 <DataAnnotationsValidator/>
 
 <div class="mat-layout-grid">
 	<div class="mat-layout-grid-inner">
 		<div class="mat-layout-grid-cell mat-layout-grid-cell-span-12">
-			<p>
-				<MatTextField Label="用户名" @bind-Value="user.Name" FullWidth="true" Outlined="true"/>
-				<ValidationMessage For="@(() => user.Name)"/>
-			</p>
 			<p>
 				<MatTextField Label="电话号码" @bind-Value="user.Tel" FullWidth="true" Outlined="true"/>
 				<ValidationMessage For="@(() => user.Tel)"/>
@@ -21,8 +18,8 @@
 			</p>
 
 			<p>
-				<MatTextField Label="重复密码" @bind-Value="RePassword" FullWidth="true" Outlined="true"/>
-				<ValidationMessage For="@(() => user.Password)"/>
+				<MatTextField Label="重复密码" @bind-Value="user.ConfirmPassword" FullWidth="true" Outlined="true"/>
+				<ValidationMessage For="@(() => user.ConfirmPassword)"/>
 			</p>
 		</div>
 
@@ -35,6 +32,11 @@
 			<MatButton Raised="true" OnClick="Reset">重置</MatButton>
 		</div>
 		<div class="mat-layout-grid-cell mat-layout-grid-cell-span-2"></div>
+		<div class="@messageCssClass mat-layout-grid-cell mat-layout-grid-cell-span-12">
+			<span>
+				@message
+			</span>
+		</div>
 	</div>
 
 </div>
@@ -42,25 +44,31 @@
 </EditForm>
 
 
-
-
-
 @code{
 
-	string RePassword = string.Empty;
+	string message = string.Empty;
+	string messageCssClass = string.Empty;
 
 	public void Reset()
 	{
-		user.Name = string.Empty;
+		user.ConfirmPassword = string.Empty;
 		user.Password = string.Empty;
 		user.Tel = string.Empty;
 	}
 
-	public User user = new()
-		{
-			Name = string.Empty,
-			Tel = string.Empty,
-			Password = string.Empty
+	public UserRegister user = new();
 
-		};
+	public async Task HandleRegistration()
+	{
+		var result = await authservice.Register(user);
+		message = result.Message;
+		if(result.Success)
+		{
+			messageCssClass = "text-success";
+		}
+		else
+		{
+			messageCssClass = "text-danger";
+		}
+	}
 }

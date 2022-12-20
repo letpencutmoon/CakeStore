@@ -4,8 +4,11 @@ global using Microsoft.EntityFrameworkCore;
 global using CakeStore.Server.Service.CakeService;
 global using CakeStore.Server.Service.CategoryService;
 global using CakeStore.Server.Service.CartService;
+global using CakeStore.Server.Service.AuthService;
 using CakeStore.Server.Data;
 using Microsoft.AspNetCore.ResponseCompression;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,7 +28,18 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<ICakeService, CakeService>();
 builder.Services.AddScoped<ICategoryService,CategoryService>();
 builder.Services.AddScoped<ICartService, CartService>();
-
+builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(option => 
+{
+    option.TokenValidationParameters = new TokenValidationParameters()
+    {
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(
+            System.Text.Encoding.UTF8.GetBytes(builder.Configuration.GetSection("AppSettings:Token").Value)),
+        ValidateIssuer = false,
+        ValidateAudience = false
+    };
+});
 var app = builder.Build();
 
 app.UseSwaggerUI();
@@ -50,6 +64,8 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapRazorPages();
 app.MapControllers();

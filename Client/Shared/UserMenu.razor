@@ -1,0 +1,40 @@
+﻿@inject ILocalStorageService localstorageservice
+@inject AuthenticationStateProvider provider
+@inject NavigationManager navigationmanager
+
+<MatNavSubMenu>
+	<MatNavSubMenuHeader>
+		<MatNavItem>
+			用户
+		</MatNavItem>
+	</MatNavSubMenuHeader>
+
+	<MatNavSubMenuList>
+		<AuthorizeView>
+			<Authorized>
+				<MatNavItem Href="/Profile">
+					个人中心
+				</MatNavItem>
+				<MatNavItem OnClick="Logout">
+					退出登录
+				</MatNavItem>
+			</Authorized>
+
+			<NotAuthorized>
+				<MatNavItem Href="@String.Format("/LogIn?returnUrl={0}",navigationmanager.ToBaseRelativePath(navigationmanager.Uri))">
+					登录/注册
+				</MatNavItem>
+			</NotAuthorized>
+		</AuthorizeView>
+
+	</MatNavSubMenuList>
+</MatNavSubMenu>
+
+@code {
+	private async Task Logout()
+	{
+		await localstorageservice.RemoveItemAsync("authToken");
+		await provider.GetAuthenticationStateAsync();
+		navigationmanager.NavigateTo("");
+	}
+}

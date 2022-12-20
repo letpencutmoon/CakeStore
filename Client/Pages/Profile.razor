@@ -1,0 +1,51 @@
+﻿@page "/Profile"
+@inject IAuthService authservice
+@attribute [Authorize]
+<AuthorizeView>
+	<Authorized>
+		<MatH3>你已经使用手机号登录 @context.User.Identity.Name</MatH3>
+	</Authorized>
+</AuthorizeView>
+
+<MatH5>修改密码</MatH5>
+<EditForm Model="user" OnValidSubmit="ChangePassword">
+	<DataAnnotationsValidator></DataAnnotationsValidator>
+	<div class="mat-layout-grid">
+	<div class="mat-layout-grid-inner">
+		<div class="mat-layout-grid-cell mat-layout-grid-cell-span-12">
+			<p>
+				<MatTextField Label="密码" @bind-Value="user.Password" FullWidth="true" Outlined="true"/>
+				<ValidationMessage For="@(() => user.Password)"/>
+			</p>
+
+			<p>
+				<MatTextField Label="重复密码" @bind-Value="user.ConfirmPassword" FullWidth="true" Outlined="true"/>
+				<ValidationMessage For="@(() => user.ConfirmPassword)"/>
+			</p>
+		</div>
+
+		<div class="mat-layout-grid-cell mat-layout-grid-cell-span-2"></div>
+		<div class="mat-layout-grid-cell mat-layout-grid-cell-span-4">
+			<MatButton Type="submit" Raised="true">提交</MatButton>
+			
+		</div>
+@*		<div class="mat-layout-grid-cell mat-layout-grid-cell-span-4">
+			<MatButton Raised="true" OnClick="Reset">重置</MatButton>
+		</div>*@
+		<div class="mat-layout-grid-cell mat-layout-grid-cell-span-2"></div>
+	</div>
+
+</div>
+</EditForm>
+@message
+
+@code {
+	UserPasswordChange user = new();
+	string message = string.Empty;
+
+	private async Task ChangePassword()
+	{
+		var result = await authservice.ChangePassword(user);
+		message = result.Message;
+	}
+}

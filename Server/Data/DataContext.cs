@@ -9,9 +9,7 @@
         }
 
         public DbSet<Cake> Cake { get; set; }
-
         public DbSet<CakeVariant> CakeVariant { get; set; }
-
         public DbSet<CakeType> CakeType { get; set; }
         public DbSet<Category> Category { get; set; }
         public DbSet<User> User { get; set; }
