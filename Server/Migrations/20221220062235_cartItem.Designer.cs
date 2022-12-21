@@ -4,6 +4,7 @@ using CakeStore.Server.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CakeStore.Server.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20221220062235_cartItem")]
+    partial class cartItem
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -157,77 +160,77 @@ namespace CakeStore.Server.Migrations
                         {
                             CakeId = 1,
                             CakeTypeId = 3,
-                            OriginalPrice = 47.6m,
+                            OriginalPrice = 46.6m,
                             Price = 58.6m
                         },
                         new
                         {
                             CakeId = 1,
                             CakeTypeId = 4,
-                            OriginalPrice = 48.6m,
+                            OriginalPrice = 46.6m,
                             Price = 58.6m
                         },
                         new
                         {
                             CakeId = 2,
                             CakeTypeId = 2,
-                            OriginalPrice = 49.6m,
+                            OriginalPrice = 46.6m,
                             Price = 58.6m
                         },
                         new
                         {
                             CakeId = 2,
                             CakeTypeId = 3,
-                            OriginalPrice = 50.6m,
+                            OriginalPrice = 46.6m,
                             Price = 58.6m
                         },
                         new
                         {
                             CakeId = 2,
                             CakeTypeId = 4,
-                            OriginalPrice = 51.6m,
+                            OriginalPrice = 46.6m,
                             Price = 58.6m
                         },
                         new
                         {
                             CakeId = 3,
                             CakeTypeId = 2,
-                            OriginalPrice = 52.6m,
+                            OriginalPrice = 46.6m,
                             Price = 58.6m
                         },
                         new
                         {
                             CakeId = 3,
                             CakeTypeId = 3,
-                            OriginalPrice = 53.6m,
+                            OriginalPrice = 58.6m,
                             Price = 58.6m
                         },
                         new
                         {
                             CakeId = 3,
                             CakeTypeId = 4,
-                            OriginalPrice = 54.6m,
+                            OriginalPrice = 46.6m,
                             Price = 58.6m
                         },
                         new
                         {
                             CakeId = 4,
                             CakeTypeId = 2,
-                            OriginalPrice = 55.6m,
+                            OriginalPrice = 46.6m,
                             Price = 58.6m
                         },
                         new
                         {
                             CakeId = 4,
                             CakeTypeId = 3,
-                            OriginalPrice = 56.6m,
+                            OriginalPrice = 46.6m,
                             Price = 58.6m
                         },
                         new
                         {
                             CakeId = 4,
                             CakeTypeId = 4,
-                            OriginalPrice = 57.6m,
+                            OriginalPrice = 46.6m,
                             Price = 58.6m
                         });
                 });
@@ -298,54 +301,6 @@ namespace CakeStore.Server.Migrations
                         });
                 });
 
-            modelBuilder.Entity("CakeStore.Shared.Model.Order", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("OrderDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<decimal>("TotalPrice")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Order");
-                });
-
-            modelBuilder.Entity("CakeStore.Shared.Model.OrderItem", b =>
-                {
-                    b.Property<int>("OrderId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CakeId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CakeTypeId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("TotalPrice")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.HasKey("OrderId", "CakeId", "CakeTypeId");
-
-                    b.HasIndex("CakeId");
-
-                    b.HasIndex("CakeTypeId");
-
-                    b.ToTable("OrderItem");
-                });
-
             modelBuilder.Entity("CakeStore.Shared.Model.User", b =>
                 {
                     b.Property<int>("ID")
@@ -408,41 +363,9 @@ namespace CakeStore.Server.Migrations
                     b.Navigation("CakeType");
                 });
 
-            modelBuilder.Entity("CakeStore.Shared.Model.OrderItem", b =>
-                {
-                    b.HasOne("CakeStore.Shared.Model.Cake", "Cake")
-                        .WithMany()
-                        .HasForeignKey("CakeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("CakeStore.Shared.Model.CakeType", "CakeType")
-                        .WithMany()
-                        .HasForeignKey("CakeTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("CakeStore.Shared.Model.Order", "Order")
-                        .WithMany("OrderItems")
-                        .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Cake");
-
-                    b.Navigation("CakeType");
-
-                    b.Navigation("Order");
-                });
-
             modelBuilder.Entity("CakeStore.Shared.Model.Cake", b =>
                 {
                     b.Navigation("CakeVariants");
-                });
-
-            modelBuilder.Entity("CakeStore.Shared.Model.Order", b =>
-                {
-                    b.Navigation("OrderItems");
                 });
 #pragma warning restore 612, 618
         }

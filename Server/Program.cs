@@ -5,6 +5,7 @@ global using CakeStore.Server.Service.CakeService;
 global using CakeStore.Server.Service.CategoryService;
 global using CakeStore.Server.Service.CartService;
 global using CakeStore.Server.Service.AuthService;
+global using CakeStore.Server.Service.OrderService;
 using CakeStore.Server.Data;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -29,6 +30,9 @@ builder.Services.AddScoped<ICakeService, CakeService>();
 builder.Services.AddScoped<ICategoryService,CategoryService>();
 builder.Services.AddScoped<ICartService, CartService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IOrderService,OrderService>();
+
+//用于鉴权后才能执行的操作
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(option => 
 {
     option.TokenValidationParameters = new TokenValidationParameters()
@@ -40,6 +44,10 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
         ValidateAudience = false
     };
 });
+
+//用于从上下文获取用户信息
+builder.Services.AddHttpContextAccessor();
+
 var app = builder.Build();
 
 app.UseSwaggerUI();

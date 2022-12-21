@@ -1,6 +1,7 @@
 ﻿@inject ILocalStorageService localstorageservice
 @inject AuthenticationStateProvider provider
 @inject NavigationManager navigationmanager
+@inject ICartService cartservice
 
 <MatNavSubMenu>
 	<MatNavSubMenuHeader>
@@ -34,6 +35,7 @@
 	private async Task Logout()
 	{
 		await localstorageservice.RemoveItemAsync("authToken");
+		await cartservice.GetCarItemsCount();
 		await provider.GetAuthenticationStateAsync();
 		navigationmanager.NavigateTo("");
 	}

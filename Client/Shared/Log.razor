@@ -4,6 +4,7 @@
 @inject ILocalStorageService localstorage
 @inject NavigationManager navigationmanager
 @inject AuthenticationStateProvider provider
+@inject ICartService cartservice
 
 <EditForm Model="user" OnValidSubmit="HandleLogin">
 <DataAnnotationsValidator/>
@@ -83,6 +84,8 @@
 
 			await localstorage.SetItemAsync("authToken",response.Data);
 			await provider.GetAuthenticationStateAsync();
+			await cartservice.StoreCartItem(true);
+			await cartservice.GetCarItemsCount();
 			navigationmanager.NavigateTo(returnUrl);
 		}
 		else

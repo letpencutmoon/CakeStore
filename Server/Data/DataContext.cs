@@ -13,8 +13,16 @@
         public DbSet<CakeType> CakeType { get; set; }
         public DbSet<Category> Category { get; set; }
         public DbSet<User> User { get; set; }
+        public DbSet<CartItem> CartItem { get; set; }
+        public DbSet<Order> Order { get; set; }
+        public DbSet<OrderItem> OrderItem { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<CartItem>().HasKey(p => new { p.UserId,p.CakeId, p.CakeTypeId });
+
+            modelBuilder.Entity<OrderItem>().HasKey(p=>new {p.OrderId, p.CakeId, p.CakeTypeId});
+
             modelBuilder.Entity<CakeVariant>().HasKey(p => new { p.CakeId, p.CakeTypeId });
             modelBuilder.Entity<CakeVariant>().HasData(
                 new CakeVariant
@@ -30,77 +38,77 @@
                     CakeId = 1,
                     CakeTypeId = 3,
                     Price = 58.6m,
-                    OriginalPrice = 46.6m
+                    OriginalPrice = 47.6m
                 },
                 new CakeVariant
                 {
                     CakeId = 1,
                     CakeTypeId = 4,
                     Price = 58.6m,
-                    OriginalPrice = 46.6m
+                    OriginalPrice = 48.6m
                 },
                 new CakeVariant
                 {
                     CakeId = 2,
                     CakeTypeId = 2,
                     Price = 58.6m,
-                    OriginalPrice = 46.6m
+                    OriginalPrice = 49.6m
                 },
                 new CakeVariant
                 {
                     CakeId = 2,
                     CakeTypeId = 3,
                     Price = 58.6m,
-                    OriginalPrice = 46.6m
+                    OriginalPrice = 50.6m
                 },
                 new CakeVariant
                 {
                     CakeId = 2,
                     CakeTypeId = 4,
                     Price = 58.6m,
-                    OriginalPrice = 46.6m
+                    OriginalPrice = 51.6m
                 },
                 new CakeVariant
                 {
                     CakeId = 3,
                     CakeTypeId = 2,
                     Price = 58.6m,
-                    OriginalPrice = 46.6m
+                    OriginalPrice = 52.6m
                 },
                 new CakeVariant
                 {
                     CakeId = 3,
                     CakeTypeId = 3,
                     Price = 58.6m,
-                    OriginalPrice = 58.6m
+                    OriginalPrice = 53.6m
                 },
                 new CakeVariant
                 {
                     CakeId = 3,
                     CakeTypeId = 4,
                     Price = 58.6m,
-                    OriginalPrice = 46.6m
+                    OriginalPrice = 54.6m
                 },
                 new CakeVariant
                 {
                     CakeId = 4,
                     CakeTypeId = 2,
                     Price = 58.6m,
-                    OriginalPrice = 46.6m
+                    OriginalPrice = 55.6m
                 },
                 new CakeVariant
                 {
                     CakeId = 4,
                     CakeTypeId = 3,
                     Price = 58.6m,
-                    OriginalPrice = 46.6m
+                    OriginalPrice = 56.6m
                 },
                 new CakeVariant
                 {
                     CakeId = 4,
                     CakeTypeId = 4,
                     Price = 58.6m,
-                    OriginalPrice = 46.6m
+                    OriginalPrice = 57.6m
                 }
                 );
 

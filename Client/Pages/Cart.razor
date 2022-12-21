@@ -1,5 +1,6 @@
 ﻿@page "/Cart"
 @inject ICartService cartservice
+@inject IOrderService orderservice
 
 <PageTitle>购物车</PageTitle>
 
@@ -41,6 +42,7 @@ else
 			总价 (@cakecart.Count):￥@cakecart.Sum(p=>p.Price * p.Quantity)
 		</div>
 	</div>
+	<button @onclick="PlaceOrder" class = "btn btn-success float-ends mt-1">下订单</button>
 }
 
 @code {
@@ -61,15 +63,12 @@ else
 
 	private async Task LoadCart()
 	{
+		await cartservice.GetCarItemsCount();
+		cakecart =await cartservice.GetCakeCarts();
 		var cart = await cartservice.GetCakeCarts();
-		if (cart!=null && cart.Count == 0)
+		if (cakecart!=null && cakecart.Count == 0)
 		{
-			message = "你的购物车是空的";
-			cakecart = new();
-		}
-		else
-		{
-			cakecart = cart;	
+			message = "你的购物车是空的";	
 		}
 	}
 
@@ -80,6 +79,10 @@ else
 			cake.Quantity = 1;
 			await cartservice.UpdateQuantity(cake);
 		}
+	}
 
+	private async Task PlaceOrder()
+	{
+		await orderservice.PlaceOrder();
 	}
 }

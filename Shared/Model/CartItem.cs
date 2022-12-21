@@ -8,6 +8,7 @@ namespace CakeStore.Shared.Model
 {
     public class CartItem
     {
+        public int UserId { get; set; }
         public int CakeId { get; set; }
         public int CakeTypeId { get; set; }
 
