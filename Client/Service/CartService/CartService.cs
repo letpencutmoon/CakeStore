@@ -6,20 +6,20 @@ namespace CakeStore.Client.Service.CartService
     {
         private readonly ILocalStorageService _localStorage;
         private readonly HttpClient _httpClient;
-        private readonly AuthenticationStateProvider _authenticationStateProvider;
+        private readonly IAuthService _authService;
 
         //public event Action OnChange;
 
-        public CartService(ILocalStorageService localStorage,HttpClient httpClient,AuthenticationStateProvider authenticationStateProvider)
+        public CartService(ILocalStorageService localStorage,HttpClient httpClient,IAuthService authService)
         {
             this._localStorage = localStorage;
             this._httpClient = httpClient;
-            this._authenticationStateProvider = authenticationStateProvider;
+            this._authService = authService;
         }
         //将单条信息添加到本地购物车（类似于session？）
         public async Task AddToCart(CartItem cartItem)
         {
-            if(await IsUserAuthenticated())
+            if(await _authService.IsUserAuthenticated())
             {
                 await _httpClient.PostAsJsonAsync("api/cart/add",cartItem);
             }
@@ -62,7 +62,7 @@ namespace CakeStore.Client.Service.CartService
         //将条目信息上传获取具体信息
         public async Task<List<CartCakeResponse>> GetCakeCarts()
         {
-            if(await IsUserAuthenticated())
+            if(await _authService.IsUserAuthenticated())
             {
                 var response = await _httpClient.GetFromJsonAsync<ServiceResponse<List<CartCakeResponse>>>("api/Cart");
                 return response.Data;
@@ -80,7 +80,7 @@ namespace CakeStore.Client.Service.CartService
 
         public async Task RemoveCakeFromCart(int cakeId, int cakeTypeId)
         {
-            if(await IsUserAuthenticated())
+            if(await _authService.IsUserAuthenticated())
             {
                 await _httpClient.DeleteAsync($"api/cart/{cakeId}/{cakeTypeId}");
             }
@@ -101,7 +101,7 @@ namespace CakeStore.Client.Service.CartService
 
         public async Task UpdateQuantity(CartCakeResponse cartResponse)
         {
-            if(await IsUserAuthenticated())
+            if(await _authService.IsUserAuthenticated())
             {
                 CartItem request = new()
                 {
@@ -141,7 +141,7 @@ namespace CakeStore.Client.Service.CartService
 
         public async Task GetCarItemsCount()
         {
-            if(await IsUserAuthenticated())
+            if(await _authService.IsUserAuthenticated())
             {
                 var result = await _httpClient.GetFromJsonAsync<ServiceResponse<int>>("api/cart/count");
                 int count = result.Data;
@@ -155,6 +155,5 @@ namespace CakeStore.Client.Service.CartService
             }
         }
 
-        private async Task<bool> IsUserAuthenticated() => (await _authenticationStateProvider.GetAuthenticationStateAsync()).User.Identity.IsAuthenticated;
     }
 }

@@ -10,11 +10,13 @@ namespace CakeStore.Server.Service.AuthService
     {
         private readonly DataContext _context;
         private readonly IConfiguration _configuration;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public AuthService(DataContext dataContext,IConfiguration configuration)
+        public AuthService(DataContext dataContext,IConfiguration configuration,IHttpContextAccessor httpContextAccessor)
         {
             this._context = dataContext;
             this._configuration = configuration;
+            this._httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<ServiceResponse<string>> LogIn(string tel, string password)
@@ -137,5 +139,8 @@ namespace CakeStore.Server.Service.AuthService
 
             return new ServiceResponse<bool> { Data = true,Message="密码已更改" };
 		}
-	}
+
+        public int GetUserId() => int.Parse(_httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+    }
 }

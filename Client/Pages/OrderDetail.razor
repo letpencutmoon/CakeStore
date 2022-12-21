@@ -1,0 +1,43 @@
+﻿@page "/Order/{OrderId:int}"
+@inject IOrderService orderservice
+
+@if(order == null)
+{
+	<span>加载订单中</span>
+}
+else
+{
+	<h3>@order.OrderDate</h3>
+	@foreach (var item in order.Cakes)
+	{
+		<div class="container">
+			<div class="image-wrapper">
+				<img src="@item.ImageUrl" class="image"/>
+			</div>
+			<div class="name">
+				<h5><a href="/Cake/@item.CakeId">@item.Name</a></h5>
+				<span>@item.CakeType</span><br/>
+				<span>数量:@item.Quantity</span>
+			</div>
+			<div class="cake-price">
+				￥@item.TotalPrice
+			</div>
+		</div>
+	}
+	<div class="cake-price">
+		总价:￥@order.TotalPrice
+	</div>
+}
+
+
+@code {
+	[Parameter]
+	public int OrderId{ get; set; }
+
+	OrderDetailsResponse order = null;
+
+	protected override async Task OnParametersSetAsync()
+	{
+		order =await orderservice.GetOrdersDetails(OrderId);
+	}
+}

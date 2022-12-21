@@ -6,17 +6,17 @@ namespace CakeStore.Server.Service.CartService
     public class CartService : ICartService
     {
         private readonly DataContext _context;
-        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IAuthService _authService;
 
-        public CartService(DataContext dataContext,IHttpContextAccessor httpContextAccessor)
+        public CartService(DataContext dataContext,IAuthService authService)
         {
             this._context = dataContext;
-            this._httpContextAccessor = httpContextAccessor;
+            this._authService = authService;
         }
 
         public async Task<ServiceResponse<bool>> AddToCart(CartItem cartItem)
         {
-            cartItem.UserId = GetUerId();
+            cartItem.UserId = _authService.GetUserId();
 
             //判断是否已有，已有就加数量，没有就新建
             var sameItem = await _context.CartItem
@@ -76,13 +76,13 @@ namespace CakeStore.Server.Service.CartService
 
         public async Task<ServiceResponse<int>> GetCartItemsCount()
         {
-            int count = (await _context.CartItem.Where(p=>p.UserId == GetUerId()).ToListAsync()).Count;
+            int count = (await _context.CartItem.Where(p=>p.UserId == _authService.GetUserId()).ToListAsync()).Count;
             return new ServiceResponse<int> { Data = count };
         }
 
         public async Task<ServiceResponse<List<CartCakeResponse>>> GetDbCartCakes()
         {
-            return await GetCakeCarts(await _context.CartItem.Where(p=>p.UserId == GetUerId()).ToListAsync());
+            return await GetCakeCarts(await _context.CartItem.Where(p=>p.UserId ==_authService.GetUserId()).ToListAsync());
         }
 
         public async Task<ServiceResponse<bool>> RemoveItemFromCart(int cakeId,int cakeTypeId)
@@ -107,7 +107,7 @@ namespace CakeStore.Server.Service.CartService
         //将本地购物车加到数据库并取出当前用户所有购物车信息
         public async Task<ServiceResponse<List<CartCakeResponse>>> StoreCartItems(List<CartItem> cartItems)
         {
-            int userId = GetUerId();
+            int userId = _authService.GetUserId();
             cartItems.ForEach(cartItem => cartItem.UserId = userId);
             _context.CartItem.AddRange(cartItems);
             await _context.SaveChangesAsync();
@@ -117,7 +117,7 @@ namespace CakeStore.Server.Service.CartService
         public async Task<ServiceResponse<bool>> UpdateQuantity(CartItem cartItem)
         {
             var dbItem = await _context.CartItem
-                .FirstOrDefaultAsync(p => p.CakeId == cartItem.CakeId && p.CakeTypeId == cartItem.CakeTypeId && p.UserId == cartItem.UserId);
+                .FirstOrDefaultAsync(p => p.CakeId == cartItem.CakeId && p.CakeTypeId == cartItem.CakeTypeId && p.UserId == _authService.GetUserId());
             if(dbItem == null)
             {
                 return new ServiceResponse<bool> 
@@ -134,6 +134,5 @@ namespace CakeStore.Server.Service.CartService
         }
 
         //从上下文获取用户登录后的信息
-        private int GetUerId() => int.Parse(_httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
     }
 }

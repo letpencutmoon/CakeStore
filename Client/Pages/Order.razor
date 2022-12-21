@@ -1,0 +1,40 @@
+﻿@page "/Order"
+@inject IOrderService orderservice
+
+@if(orders == null)
+{
+	<span>加载订单中</span>
+}
+else if(orders.Count <= 0)
+{
+	<span>你没有数据</span>
+}
+else
+{
+	foreach (var order in orders)
+	{
+		<div class = "container">
+			<div class="image-wrapper">
+				<img src="@order.CakeImageUrl" class="image"/>
+			</div>
+			<div class="details">
+				<h4>@order.Cake</h4>
+				<span>@order.OrderDate</span> <br/>
+				<a href="Order/@order.Id">看更多</a>
+			</div>
+			<div class="order-price">
+				￥@order.TotalPrice
+			</div>
+		</div>
+	}
+}
+
+
+@code {
+	List<OrderOverviewResponse> orders = null;
+
+	protected override async Task OnInitializedAsync()
+	{
+		orders =await orderservice.GetOrders();
+	}
+}

@@ -8,6 +8,10 @@
 {
 	<span>@message</span>
 }
+else if (orderPlaced)
+{
+	<span>感谢你的下单</span>
+}
 else
 {
 	<div>
@@ -23,7 +27,7 @@ else
 					<div>
 						<input type="number" 
 						value="@item.Quantity"
-						@onchange="@((ChangeEventArgs e)=>UpdateQuantity(e,item))"
+						@onchange="((ChangeEventArgs e)=>UpdateQuantity(e,item))"
 						class="form-control input-quantity"
 						min="1"
 
@@ -48,10 +52,12 @@ else
 @code {
 	public List<CartCakeResponse> cakecart = null;
 	string message = "正在加载购物车";
+	bool orderPlaced = false;
 
 	//初始化时获取购物车内的信息
 	protected override async Task OnInitializedAsync()
 	{
+		orderPlaced = false;
 		await LoadCart();
 	}
 
@@ -77,12 +83,14 @@ else
 		cake.Quantity = int.Parse(args.Value.ToString());
 		if(cake.Quantity < 1){
 			cake.Quantity = 1;
-			await cartservice.UpdateQuantity(cake);
 		}
+		await cartservice.UpdateQuantity(cake);
 	}
 
 	private async Task PlaceOrder()
 	{
 		await orderservice.PlaceOrder();
+		await cartservice.GetCarItemsCount();
+		orderPlaced = true;
 	}
 }
