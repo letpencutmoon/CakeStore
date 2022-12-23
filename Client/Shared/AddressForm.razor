@@ -1,0 +1,73 @@
+﻿@inject IAddressService addressservice
+
+@if(address == null)
+{
+	<span>
+		您未指定收货地址
+		<button class="btn" @onclick="InitAddress">添加一个收货地址</button>
+	</span>
+}
+else if(!editAddress)
+{
+	<p>
+		<span>@address.Name</span><br/>
+		<span>@address.Province @address.City</span><br/>
+		<span>@address.Street</span><br/>
+		<span>@address.Zip</span><br/>
+	</p>
+	<button class="btn btn-primary" @onclick="EditAddress">编辑</button>
+}
+else
+{
+	<EditForm Model="address" OnSubmit="SubmitAddress">
+		<div class="mb-3">
+			<label for="name">姓名</label>
+			<InputText id="name" @bind-Value="address.Name" class="form-control"/>
+		</div>
+		<div class="mb-3">
+			<label for="province">省份</label>
+			<InputText id="province" @bind-Value="address.Province" class="form-control"/>
+		</div>
+		<div class="mb-3">
+			<label for="city">城市</label>
+			<InputText id="city" @bind-Value="address.City" class="form-control"/>
+		</div>
+		<div class="mb-3">
+			<label for="street">街道</label>
+			<InputText id="street" @bind-Value="address.Street" class="form-control"/>
+		</div>
+		<div class="mb-3">
+			<label for="zip">邮政编码</label>
+			<InputText id="zip" @bind-Value="address.Zip" class="form-control"/>
+		</div>
+		<button type="submit" class="btn btn-primary">保存</button>
+	</EditForm>
+}
+
+
+@code {
+	Address address = null;
+	bool editAddress = false;
+
+	protected override async Task OnInitializedAsync()
+	{
+		address = await addressservice.GetAddress();
+	}
+
+	private async Task SubmitAddress()
+	{
+		editAddress = false;
+		address = await addressservice.AddOrUpdateAddress(address);
+	}
+
+	private void InitAddress()
+	{
+		address = new();
+		editAddress = true;
+	}
+
+	private void EditAddress()
+	{
+		editAddress = true;
+	}
+}

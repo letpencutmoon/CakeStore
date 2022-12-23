@@ -1,6 +1,7 @@
 ﻿@page "/Cart"
 @inject ICartService cartservice
 @inject IOrderService orderservice
+@inject IAuthService authservice
 
 <PageTitle>购物车</PageTitle>
 
@@ -19,7 +20,7 @@ else
 		{
 			<div class = "container">
 				<div class = "image-wrapper">
-					<img src="@item.Imgurl" class="image"/>
+					<img src="@item.Imgurl" class="img"/>
 				</div>
 				<div class="name">
 					<h5><a href="/cake/@item.CakeId">@item.Name</a></h5>
@@ -46,18 +47,29 @@ else
 			总价 (@cakecart.Count):￥@cakecart.Sum(p=>p.Price * p.Quantity)
 		</div>
 	</div>
-	<button @onclick="PlaceOrder" class = "btn btn-success float-ends mt-1">下订单</button>
+
+	@if (isAuthenticated)
+	{
+		<div>
+			<h5>收货地址</h5>
+			<AddressForm />
+		</div>
+	}
+
+	<button @onclick="PlaceOrder" class = "btn btn-success float-end mt-1">下订单</button>
 }
 
 @code {
 	public List<CartCakeResponse> cakecart = null;
 	string message = "正在加载购物车";
 	bool orderPlaced = false;
+	bool isAuthenticated = false;
 
 	//初始化时获取购物车内的信息
 	protected override async Task OnInitializedAsync()
 	{
 		orderPlaced = false;
+		isAuthenticated =await authservice.IsUserAuthenticated();
 		await LoadCart();
 	}
 

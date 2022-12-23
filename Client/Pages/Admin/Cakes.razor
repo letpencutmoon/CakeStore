@@ -1,0 +1,71 @@
+﻿@page "/admin/cakes"
+@inject ICakeService cakeservice
+@inject NavigationManager navigationmanager
+@attribute [Authorize(Roles = "Admin")]
+
+@if(cakeservice.AdminCakes == null)
+{
+	<span>加载蛋糕中</span>
+}
+else
+{
+	<button class="btn float-end btn-primary" @onclick="CreateCake">
+		<i class="oi oi-plus"></i> 添加蛋糕
+	</button>
+	<table class="table">
+		<thead>
+			<tr>
+				<th></th>
+				<th>名称</th>
+				<th>种类</th>
+				<th>价格</th>
+				<th>可见性</th>
+				<th></th>
+			</tr>
+		</thead>
+		<tbody>
+			<Virtualize Items="cakeservice.AdminCakes" Context="cake">
+				<tr>
+					<td><img src="@cake.Imgurl" class="img"/></td>
+					<td>@cake.Name</td>
+					<td>
+						@foreach(var item in cake.CakeVariants)
+						{
+							<span>@item.CakeType.Name</span><br/>
+						}
+					</td>
+					<td>
+						@foreach(var item in cake.CakeVariants)
+						{
+							<span>@item.Price</span><br/>
+						}
+					</td>
+					<td>@(cake.Visible ? "✔️":"")</td>
+					<td>
+						<button class="btn btn-primary" @onclick="(()=>EditCake(cake.ID))">
+							<i class="oi oi-pencil"></i>
+						</button>
+					</td>
+				</tr>
+			</Virtualize>
+		</tbody>
+	</table>
+}
+
+
+@code {
+	protected override async Task OnInitializedAsync()
+	{
+		await cakeservice.GetAdminCakes();
+	}
+
+	void EditCake(int cakeId)
+	{
+		navigationmanager.NavigateTo($"/admin/cake/{cakeId}");
+	}
+
+	void CreateCake()
+	{
+		navigationmanager.NavigateTo("admin/cake");
+	}
+}

@@ -1,5 +1,6 @@
 ﻿using CakeStore.Server.Data;
 using CakeStore.Server.Service.CakeService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -41,6 +42,34 @@ namespace CakeStore.Server.Controllers
         {
             var result = await _cakeService.Searchsuggestions(searchText);
             return result;
+        }
+
+        [HttpGet("admin"),Authorize(Roles = "Admin")]
+        public async Task<ActionResult<ServiceResponse<List<Cake>>>> GetAdminCake()
+        {
+            var result = await _cakeService.GetAdminCake();
+            return Ok(result);
+        }
+
+        [HttpPost, Authorize(Roles = "Admin")]
+        public async Task<ActionResult<ServiceResponse<Cake>>> CreateCake(Cake cake)
+        {
+            var result = await _cakeService.CreatCake(cake);
+            return Ok(result);
+        }
+
+        [HttpPut, Authorize(Roles = "Admin")]
+        public async Task<ActionResult<ServiceResponse<Cake>>> UpdateCake(Cake cake)
+        {
+            var result = await _cakeService.UpdateCake(cake);
+            return Ok(result);
+        }
+
+        [HttpDelete("{cakeId}"), Authorize(Roles = "Admin")]
+        public async Task<ActionResult<ServiceResponse<bool>>> DeleteCake(int cakeId)
+        {
+            var result = await _cakeService.Delete(cakeId);
+            return Ok(result);
         }
     }
 }

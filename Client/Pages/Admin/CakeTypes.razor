@@ -1,0 +1,88 @@
+﻿@page "/admin/caketype"
+@inject ICakeTypeService caketypeservice
+@implements IDisposable
+@attribute [Authorize(Roles = "Admin")]
+
+
+@foreach (var item in caketypeservice.CakeTypes)
+{
+	@if (item.Editing)
+	{
+		<EditForm Model="editingCakeType" OnSubmit="UpdateCakeType">
+			<div class="row">
+				<div class="col">
+					<InputText @bind-Value="editingCakeType.Name" class="form-control"></InputText>
+				</div>
+				<div class="col">
+					<button type="submit" class="btn btn-primary">
+						<i class="oi oi-cloud-upload"></i>
+					</button>
+					@*<button class="btn btn-primary" @onclick="CancelEditing">
+						<i class="oi oi-circle-x"></i>
+					</button>*@
+				</div>
+			</div>
+		</EditForm>
+	}
+	else
+	{
+		<div class="row">
+			<div class="col">
+				@item.Name
+			</div>
+			<div class="col">
+				<button class="btn btn-primary" @onclick="(()=>EditCakeType(item))">
+					<i class="oi oi-pencil"></i>
+				</button>
+			</div>
+		</div>
+	}
+}
+<button class="btn btn-promary" @onclick="CreateNewCakeType">
+	<i class="oi oi-plus"></i>添加新蛋糕类型
+</button>
+
+
+@code {
+	CakeType editingCakeType = null;
+
+	protected override async Task OnInitializedAsync()
+	{
+		await caketypeservice.GetCakeTypes();
+		caketypeservice.OnChange += StateHasChanged;
+	}
+
+	public void Dispose()
+	{
+		caketypeservice.OnChange -= StateHasChanged;
+	}
+
+	private void EditCakeType(CakeType cakeType)
+	{
+		cakeType.Editing = true;
+		editingCakeType = cakeType;
+	}
+
+	private void CreateNewCakeType()
+	{
+		editingCakeType = caketypeservice.CreateNewCakeType();
+	}
+
+	private async Task UpdateCakeType()
+	{
+		if (editingCakeType.IsNew)
+		{
+			await caketypeservice.AddCakeType(editingCakeType);
+		}
+		else
+		{
+			await caketypeservice.UpdateCakeType(editingCakeType);
+		}
+		editingCakeType = new();
+	}
+
+	private async Task CancelEditing()
+	{
+		editingCakeType = new();
+	}
+}

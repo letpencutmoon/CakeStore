@@ -6,6 +6,8 @@ global using CakeStore.Server.Service.CategoryService;
 global using CakeStore.Server.Service.CartService;
 global using CakeStore.Server.Service.AuthService;
 global using CakeStore.Server.Service.OrderService;
+global using CakeStore.Server.Service.AddressService;
+global using CakeStore.Server.Service.CakeTypeService;
 using CakeStore.Server.Data;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -31,6 +33,9 @@ builder.Services.AddScoped<ICategoryService,CategoryService>();
 builder.Services.AddScoped<ICartService, CartService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IOrderService,OrderService>();
+builder.Services.AddScoped<IAddressService, AddressService>();
+builder.Services.AddScoped<ICakeTypeService, CakeTypeService>();
+
 
 //用于鉴权后才能执行的操作
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(option => 

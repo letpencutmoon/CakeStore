@@ -1,0 +1,195 @@
+﻿@page "/admin/cake"
+@page "/admin/cake/{id:int}"
+@inject ICakeService cakeservice
+@inject ICakeTypeService caketypeservice
+@inject ICategoryService categoryservice
+@inject NavigationManager navigationmanager
+@*@inject JSRuntime jsruntime*@
+
+
+@if (loading)
+{
+	<span>@msg</span>
+}
+else
+{
+	if (cake.Editing)
+	{
+		<h3>编辑 @cake.Name</h3>
+	}
+	else
+	{
+		<h3>添加新蛋糕</h3>
+	}
+
+
+	<EditForm Model="cake" OnValidSubmit="AddOrUpdateCake">
+		<DataAnnotationsValidator></DataAnnotationsValidator>
+		<div class="mb-0">
+			<label for="name">名称</label>
+			<InputText id="name" @bind-Value="cake.Name" class="form-control"></InputText>
+		</div>
+		<div class="mb-0">
+			<label for="imgUrl">图片链接</label>
+			<InputText id="imgUrl" @bind-Value="cake.Imgurl" class="form-control"></InputText>
+		</div>
+		<div class="mb-0">
+			<img src="@cake.Imgurl"/>
+		</div>
+		<div class="mb-0">
+			<label for="description">描述</label>
+			<InputTextArea id="description" @bind-Value="cake.Description" class="form-control"></InputTextArea>
+		</div>
+		<hr/>
+		<div class="header">
+			<div class="col">蛋糕类型/大小分类</div>
+			<div class="col">价格</div>
+			<div class="col">原价</div>
+			<div class="col">可见性</div>
+			<div class="col"></div>
+		</div>
+
+		@foreach (var variant in cake.CakeVariants)
+		{
+			<div class="row">
+				<div class="col">
+					<InputSelect disabled="@variant.IsDeleted" @bind-Value="variant.CakeTypeId" class="form-control">
+						@foreach (var item in caketypeservice.CakeTypes)
+						{
+							<option value="@item.Id.ToString()">@item.Name</option>
+						}
+					</InputSelect>
+				</div>
+
+				<div class="col">
+					<InputNumber @bind-Value="variant.Price" class="form-control" disabled="@variant.IsDeleted"></InputNumber>
+				</div>
+				<div class="col">
+					<InputNumber @bind-Value="variant.OriginalPrice" class="form-control" disabled="@variant.IsDeleted"></InputNumber>
+				</div>
+				<div class="col col-visible">
+					<InputCheckbox @bind-Value="variant.Visible" style="transform:scale(1.5,1.5);"  disabled="@variant.IsDeleted"></InputCheckbox>
+				</div>
+				<div class="col">
+					<button class="btn btn-primary" disabled="@variant.IsDeleted" @onclick="(()=>RemoveVariant(variant.CakeTypeId))">
+						<i class="oi oi-trash"></i>
+					</button>
+				</div>
+			</div>
+		}
+		<button class="btn btn-primary" @onclick="AddVariant">
+			<i class="oi oi-plus"></i> 添加尺寸类型
+		</button>
+		<hr/>
+		<div class="mb-0">
+			<label for="category">类型</label>
+			<InputSelect id="category" @bind-Value="cake.CategoryId" class="form-control">
+				@foreach (var item in categoryservice.AdminCategories)
+				{
+					<option value="@item.ID">@item.Name</option>
+				}
+			</InputSelect>
+		</div>
+		<hr/>
+
+		@*特色商品同下*@
+		<div class="form-check">
+			<InputCheckbox id="visible" @bind-Value="cake.Visible" class="form-check-input"></InputCheckbox>
+			<label for="visible" class="form-check-label">可见性</label>
+		</div>
+		<hr/>
+		<button type="submit" class="btn btn-primary float-end">@btnText</button>
+		<ValidationSummary></ValidationSummary>
+	</EditForm>
+
+	@if (!cake.IsNew)
+	{
+		<button type="button" class="btn btn-danger float-start" @onclick="DeleteCake">
+			删除蛋糕
+		</button>
+	}
+}
+
+
+
+
+@code {
+	[Parameter]
+	public int Id { get; set; }
+	bool loading = true;
+	Cake cake = new();
+	string btnText = "";
+	string msg = "Loading...";
+
+	protected override async Task OnInitializedAsync()
+	{
+		await caketypeservice.GetCakeTypes();
+		await categoryservice.GetAdminCategories();
+	}
+
+	protected override async Task OnParametersSetAsync()
+	{
+		if(Id == 0)
+		{
+			cake = new() { IsNew = true };
+			btnText = "添加新蛋糕";
+		}
+		else
+		{
+			Cake dbCake = (await cakeservice.GetCake(Id)).Data;
+			if(dbCake == null)
+			{
+				msg = $"未找到序号 '{Id}'的蛋糕";
+				return;
+			}
+			cake = dbCake;
+			cake.Editing = true;
+			btnText = "更新蛋糕信息";
+		}
+		loading = false;
+	}
+
+	void RemoveVariant(int cakeTypeId)
+	{
+		var variant = cake.CakeVariants.Find(p=>p.CakeTypeId == cakeTypeId);
+		if (variant == null) return;
+		if (variant.IsNew)
+		{
+			cake.CakeVariants.Remove(variant);
+		}
+		else
+		{
+			variant.IsDeleted = true;
+		}
+	}
+
+	void AddVariant()
+	{
+		cake.CakeVariants.Add(new CakeVariant{IsNew=true,CakeId = cake.ID});
+	}
+
+	async void AddOrUpdateCake()
+	{
+		if (cake.IsNew)
+		{
+			var result = await cakeservice.CreateCake(cake);
+			navigationmanager.NavigateTo($"admin/cake/{result.ID}");
+		}
+		else
+		{
+			cake = await cakeservice.UpdateCake(cake);
+			navigationmanager.NavigateTo($"admin/cake/{cake.ID}",true);
+		}
+	}
+
+	async void DeleteCake()
+	{
+		//bool confirmed = await jsruntime.InvokeAsync<bool>("确认删除",$"你是否确定删除{cake.Name}？");
+		//if (confirmed)
+		//{
+			await cakeservice.DeleteCake(cake);
+			navigationmanager.NavigateTo("admin/cakes");
+		//}
+		
+	}
+}

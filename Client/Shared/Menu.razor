@@ -1,4 +1,5 @@
 ﻿@inject ICategoryService categoryservice
+@implements IDisposable
 
 <MatDrawer @bind-Opened="@Opened">
     <MatNavMenu>
@@ -42,5 +43,11 @@
     protected override async Task OnInitializedAsync()
     {
         await categoryservice.GetCategories();
+        categoryservice.OnChange += StateHasChanged;
+    }
+
+    public void Dispose()
+    {
+        categoryservice.OnChange -= StateHasChanged;
     }
 }

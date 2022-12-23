@@ -3,11 +3,16 @@
 @attribute [Authorize]
 <AuthorizeView>
 	<Authorized>
-		<MatH3>你已经使用手机号登录 @context.User.Identity.Name</MatH3>
+		<h5>你已经使用手机号 @context.User.Identity.Name 登录</h5>
 	</Authorized>
 </AuthorizeView>
 
-<MatH5>修改密码</MatH5>
+<h5>收货地址</h5>
+<AddressForm />
+<p></p>
+
+
+<h5>修改密码</h5>
 <EditForm Model="user" OnValidSubmit="ChangePassword">
 	<DataAnnotationsValidator></DataAnnotationsValidator>
 	<div class="mat-layout-grid">

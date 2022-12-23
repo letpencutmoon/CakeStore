@@ -1,0 +1,30 @@
+﻿@inject AuthenticationStateProvider authenstateprovider
+@using System.Security.Claims
+
+@if (authorized)
+{
+
+	<MatNavItem Href="/admin/category">
+		类别管理
+	</MatNavItem>
+	<MatNavItem Href="/admin/caketype">
+		蛋糕类目管理
+	</MatNavItem>
+	<MatNavItem Href="/admin/cakes">
+		蛋糕管理
+	</MatNavItem>
+	<MatDivider></MatDivider>
+}
+
+
+@code {
+	bool authorized = false;
+
+	protected override async Task OnInitializedAsync()
+	{
+
+		string role = (await authenstateprovider.GetAuthenticationStateAsync())
+			.User.Claims.FirstOrDefault(p => p.Type == ClaimTypes.Role).Value;
+		if (role.Contains("Admin")) authorized = true;
+	}
+}

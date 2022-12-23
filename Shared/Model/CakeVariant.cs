@@ -11,10 +11,10 @@ namespace CakeStore.Shared.Model
     public class CakeVariant
     {
         [JsonIgnore]
-        public Cake Cake { get; set; }
+        public Cake? Cake { get; set; }
 
         public int CakeId { get; set; }
-        public CakeType CakeType { get; set; }
+        public CakeType? CakeType { get; set; }
         public int CakeTypeId { get; set; }
 
         [Column(TypeName ="decimal(18,2)")]
@@ -22,5 +22,13 @@ namespace CakeStore.Shared.Model
 
         [Column(TypeName = "decimal(18,2)")]
         public decimal OriginalPrice { get; set; }
+        public bool Visible { get; set; } = true;
+        public bool IsDeleted { get; set; } = false;
+
+        [NotMapped]
+        public bool Editing { get; set; } = false;
+
+        [NotMapped]
+        public bool IsNew { get; set; } = false;
     }
 }

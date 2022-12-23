@@ -4,6 +4,7 @@ using CakeStore.Server.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CakeStore.Server.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20221221235511_address")]
+    partial class address
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -55,9 +58,6 @@ namespace CakeStore.Server.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId")
-                        .IsUnique();
-
                     b.ToTable("Address");
                 });
 
@@ -80,15 +80,9 @@ namespace CakeStore.Server.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("Visible")
-                        .HasColumnType("bit");
 
                     b.HasKey("ID");
 
@@ -103,9 +97,7 @@ namespace CakeStore.Server.Migrations
                             CategoryId = 1,
                             Description = "啊吧啊吧啊吧",
                             Imgurl = "https://imagecdn.lapetit.cn/postsystem/docroot/images/goods/201212/10800/list_10800.jpg",
-                            IsDeleted = false,
-                            Name = "雪域牛乳芝士",
-                            Visible = true
+                            Name = "雪域牛乳芝士"
                         },
                         new
                         {
@@ -113,9 +105,7 @@ namespace CakeStore.Server.Migrations
                             CategoryId = 1,
                             Description = "啊吧啊吧啊吧",
                             Imgurl = "https://imagecdn.lapetit.cn/postsystem/docroot/images/goods/201310/12287/list_12287.jpg?v=1666669194",
-                            IsDeleted = false,
-                            Name = "环游世界",
-                            Visible = true
+                            Name = "环游世界"
                         },
                         new
                         {
@@ -123,9 +113,7 @@ namespace CakeStore.Server.Migrations
                             CategoryId = 1,
                             Description = "啊吧啊吧啊吧",
                             Imgurl = "https://imagecdn.lapetit.cn/postsystem/docroot/images/promotion/202207/9AF4E9159E7B708C3437781A69A6B62B.jpg",
-                            IsDeleted = false,
-                            Name = "云朵芒芒",
-                            Visible = true
+                            Name = "云朵芒芒"
                         },
                         new
                         {
@@ -133,9 +121,7 @@ namespace CakeStore.Server.Migrations
                             CategoryId = 1,
                             Description = "啊吧啊吧啊吧",
                             Imgurl = "https://imagecdn.lapetit.cn/postsystem/docroot/images/promotion/202209/2038FF4F22F25BC9A02A61B65851B028.jpg",
-                            IsDeleted = false,
-                            Name = "星云知秋",
-                            Visible = true
+                            Name = "星云知秋"
                         });
                 });
 
@@ -186,17 +172,11 @@ namespace CakeStore.Server.Migrations
                     b.Property<int>("CakeTypeId")
                         .HasColumnType("int");
 
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
                     b.Property<decimal>("OriginalPrice")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
-
-                    b.Property<bool>("Visible")
-                        .HasColumnType("bit");
 
                     b.HasKey("CakeId", "CakeTypeId");
 
@@ -209,109 +189,85 @@ namespace CakeStore.Server.Migrations
                         {
                             CakeId = 1,
                             CakeTypeId = 2,
-                            IsDeleted = false,
                             OriginalPrice = 46.6m,
-                            Price = 58.6m,
-                            Visible = true
+                            Price = 58.6m
                         },
                         new
                         {
                             CakeId = 1,
                             CakeTypeId = 3,
-                            IsDeleted = false,
                             OriginalPrice = 47.6m,
-                            Price = 58.6m,
-                            Visible = true
+                            Price = 58.6m
                         },
                         new
                         {
                             CakeId = 1,
                             CakeTypeId = 4,
-                            IsDeleted = false,
                             OriginalPrice = 48.6m,
-                            Price = 58.6m,
-                            Visible = true
+                            Price = 58.6m
                         },
                         new
                         {
                             CakeId = 2,
                             CakeTypeId = 2,
-                            IsDeleted = false,
                             OriginalPrice = 49.6m,
-                            Price = 58.6m,
-                            Visible = true
+                            Price = 58.6m
                         },
                         new
                         {
                             CakeId = 2,
                             CakeTypeId = 3,
-                            IsDeleted = false,
                             OriginalPrice = 50.6m,
-                            Price = 58.6m,
-                            Visible = true
+                            Price = 58.6m
                         },
                         new
                         {
                             CakeId = 2,
                             CakeTypeId = 4,
-                            IsDeleted = false,
                             OriginalPrice = 51.6m,
-                            Price = 58.6m,
-                            Visible = true
+                            Price = 58.6m
                         },
                         new
                         {
                             CakeId = 3,
                             CakeTypeId = 2,
-                            IsDeleted = false,
                             OriginalPrice = 52.6m,
-                            Price = 58.6m,
-                            Visible = true
+                            Price = 58.6m
                         },
                         new
                         {
                             CakeId = 3,
                             CakeTypeId = 3,
-                            IsDeleted = false,
                             OriginalPrice = 53.6m,
-                            Price = 58.6m,
-                            Visible = true
+                            Price = 58.6m
                         },
                         new
                         {
                             CakeId = 3,
                             CakeTypeId = 4,
-                            IsDeleted = false,
                             OriginalPrice = 54.6m,
-                            Price = 58.6m,
-                            Visible = true
+                            Price = 58.6m
                         },
                         new
                         {
                             CakeId = 4,
                             CakeTypeId = 2,
-                            IsDeleted = false,
                             OriginalPrice = 55.6m,
-                            Price = 58.6m,
-                            Visible = true
+                            Price = 58.6m
                         },
                         new
                         {
                             CakeId = 4,
                             CakeTypeId = 3,
-                            IsDeleted = false,
                             OriginalPrice = 56.6m,
-                            Price = 58.6m,
-                            Visible = true
+                            Price = 58.6m
                         },
                         new
                         {
                             CakeId = 4,
                             CakeTypeId = 4,
-                            IsDeleted = false,
                             OriginalPrice = 57.6m,
-                            Price = 58.6m,
-                            Visible = true
+                            Price = 58.6m
                         });
                 });
 
@@ -342,9 +298,6 @@ namespace CakeStore.Server.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -352,9 +305,6 @@ namespace CakeStore.Server.Migrations
                     b.Property<string>("Url")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("Visible")
-                        .HasColumnType("bit");
 
                     b.HasKey("ID");
 
@@ -364,34 +314,26 @@ namespace CakeStore.Server.Migrations
                         new
                         {
                             ID = 1,
-                            IsDeleted = false,
                             Name = "蛋糕",
-                            Url = "OrdinaryCake",
-                            Visible = true
+                            Url = "OrdinaryCake"
                         },
                         new
                         {
                             ID = 2,
-                            IsDeleted = false,
                             Name = "生日蛋糕",
-                            Url = "BirthdayCake",
-                            Visible = true
+                            Url = "BirthdayCake"
                         },
                         new
                         {
                             ID = 3,
-                            IsDeleted = false,
                             Name = "面包",
-                            Url = "Bread",
-                            Visible = true
+                            Url = "Bread"
                         },
                         new
                         {
                             ID = 4,
-                            IsDeleted = false,
                             Name = "饼干",
-                            Url = "Cookie",
-                            Visible = true
+                            Url = "Cookie"
                         });
                 });
 
@@ -466,10 +408,6 @@ namespace CakeStore.Server.Migrations
                         .IsRequired()
                         .HasColumnType("varbinary(max)");
 
-                    b.Property<string>("Role")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Tel")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -477,15 +415,6 @@ namespace CakeStore.Server.Migrations
                     b.HasKey("ID");
 
                     b.ToTable("User");
-                });
-
-            modelBuilder.Entity("CakeStore.Shared.Model.Address", b =>
-                {
-                    b.HasOne("CakeStore.Shared.Model.User", null)
-                        .WithOne("Address")
-                        .HasForeignKey("CakeStore.Shared.Model.Address", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("CakeStore.Shared.Model.Cake", b =>
@@ -553,12 +482,6 @@ namespace CakeStore.Server.Migrations
             modelBuilder.Entity("CakeStore.Shared.Model.Order", b =>
                 {
                     b.Navigation("OrderItems");
-                });
-
-            modelBuilder.Entity("CakeStore.Shared.Model.User", b =>
-                {
-                    b.Navigation("Address")
-                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

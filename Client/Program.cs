@@ -7,6 +7,8 @@ global using CakeStore.Client.Service.CartService;
 global using CakeStore.Client.Service.AuthService;
 global using Microsoft.AspNetCore.Components.Authorization;
 global using CakeStore.Client.Service.OrderService;
+global using CakeStore.Client.Service.AddressService;
+global using CakeStore.Client.Service.CakeTypeService;
 using CakeStore.Client;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
@@ -23,6 +25,8 @@ builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<ICartService,CartService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
+builder.Services.AddScoped<IAddressService, AddressService>();
+builder.Services.AddScoped<ICakeTypeService, CakeTypeService>();
 
 builder.Services.AddOptions();
 builder.Services.AddAuthorizationCore();

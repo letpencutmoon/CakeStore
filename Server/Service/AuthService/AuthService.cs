@@ -93,13 +93,14 @@ namespace CakeStore.Server.Service.AuthService
             }
         }
 
-        //生成登录令牌(不太能看懂这些对象是啥是干嘛的)
+        //生成登录令牌
         private string CreateToken(User user)
         {
             List<Claim> claims = new()
             {
                 new Claim(ClaimTypes.NameIdentifier, user.ID.ToString()),
-                new Claim(ClaimTypes.Name, user.Tel)
+                new Claim(ClaimTypes.Name, user.Tel),
+                new Claim(ClaimTypes.Role, user.Role)
             };
 
             var key =new SymmetricSecurityKey(System.Text.Encoding.UTF8

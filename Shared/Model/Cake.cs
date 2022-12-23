@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
@@ -10,6 +11,8 @@ namespace CakeStore.Shared.Model
     public class Cake
     {
         public int ID { get; set; }
+
+        [Required]
         public string Name { get; set; } = String.Empty;
 
         public string Description { get; set; } = String.Empty ;
@@ -24,5 +27,13 @@ namespace CakeStore.Shared.Model
         public int CategoryId { get; set; }
 
         public List<CakeVariant> CakeVariants { get; set; } = new();
+        public bool Visible { get; set; } = true;
+        public bool IsDeleted { get; set; } = false;
+
+        [NotMapped]
+        public bool Editing { get; set; } = false;
+
+        [NotMapped]
+        public bool IsNew { get; set; } = false;
     }
 }
